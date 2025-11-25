@@ -66,7 +66,7 @@ namespace Banco
 
                         AgregarNuevaCuenta(b, cuentaNueva); // agrega cuenta
 
-                        break; 
+                        break;
 
                     case 2: // Eliminar cuenta del banco
 
@@ -213,13 +213,13 @@ namespace Banco
                     break;
                 }
             }
-           
+
             if (eliminarCuenta == null)
             {
                 Console.WriteLine("\nLa cuenta no existe.");
                 return;
             }
-            
+
             b.EliminarCuenta(eliminarCuenta);
             Console.WriteLine("\nCuenta eliminada.");
 
@@ -251,26 +251,26 @@ namespace Banco
                 {
                     b.EliminarCliente(eliminarCliente);
                     Console.WriteLine("\nCliente eliminado.");
-                }  
+                }
             }
         }
         public static void ClienteCuentas(Banco b, string dni)
         {
-            int contador = 0;
-            
             Console.WriteLine($"\nCuentas con DNI {dni}");
 
-            for (int i = 0; i < b.GetListaCuentas().Count; i++)
+            int contador = 0;
+
+            for (int i = 0; i < b.GetCantidadCuentas(); i++)
             {
                 if (b.GetListaCuentas()[i].Dni == dni)
                 {
                     contador++;
                 }
             }
-            
+
             if (contador > 1)
             {
-                foreach(Cuenta c in b.GetListaCuentas())
+                foreach (Cuenta c in b.GetListaCuentas())
                 {
                     if (c.Dni == dni)
                     {
@@ -281,38 +281,32 @@ namespace Banco
 
             Console.WriteLine($"\nTotal: {contador}");
         }
-        public static void Transferir(Banco b,int cuenta1, int cuenta2, double transferir)
+        public static void Transferir(Banco b, int cuenta1, int cuenta2, double monto)
         {
-            Cuenta c1 = null;
-            Cuenta c2 = null;
+            Cuenta c1 = b.BuscarCuenta(cuenta1);
+            Cuenta c2 = b.BuscarCuenta(cuenta2);
 
-            foreach (Cuenta c in b.GetListaCuentas())
+            if (c1 == null)
             {
-                if (c.NumeroCuenta == cuenta1)
-                {
-                    c1 = c;
-                    break;
-                }
+                Console.WriteLine("\nLa cuenta origen no existe.");
+                return;
             }
 
-            foreach (Cuenta c in b.GetListaCuentas())
+            if (c2 == null)
             {
-                if (c.NumeroCuenta == cuenta2)
-                {
-                    c2 = c;
-                    break;
-                }
+                Console.WriteLine("\nLa cuenta destino no existe.");
+                return;
             }
 
-            if (transferir > c1.Saldo)
+            if (monto > c1.Saldo)
             {
-                throw new Exception("\nSaldo insuficiente para transferir");
+                throw new Exception("\nSaldo insuficiente para transferir.");
             }
 
-            c1.Saldo -= transferir;
-            c2.Saldo += transferir;
-            
-            Console.WriteLine($"\nTransferencia exitosa.");
+            c1.Saldo -= monto;
+            c2.Saldo += monto;
+
+            Console.WriteLine("\nTransferencia exitosa.");
             Console.WriteLine($"\nNuevo saldo cuenta {cuenta1}: {c1.Saldo}");
             Console.WriteLine($"\nNuevo saldo cuenta {cuenta2}: {c2.Saldo}");
         }
@@ -345,7 +339,7 @@ namespace Banco
                     Console.WriteLine($"\nSaldo actual: {c.Saldo}");
                     break;
                 }
-            }        
+            }
         }
 
         public static void CargarClientesDesdeArchivo(Banco b, string ruta)

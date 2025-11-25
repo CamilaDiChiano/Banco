@@ -29,13 +29,29 @@ namespace Banco
             return cuentas;
         }
 
+        public int GetCantidadCuentas()
+        {
+            return cuentas.Count;
+        }
+        public Cuenta BuscarCuenta(int buscarCuenta)
+        {
+            foreach (Cuenta c in cuentas)
+            {
+                if (c.NumeroCuenta == buscarCuenta)
+                {
+                    return c;
+                }
+            }
+
+            return null;
+        }
         public void AgregarNuevaCuenta(Cuenta cuenta)
         {
-           cuentas.Add(cuenta);
+            cuentas.Add(cuenta);
         }
         public void AgregarNuevoCliente(Cliente cliente)
         {
-           clientes.Add(cliente);
+            clientes.Add(cliente);
         }
 
         public void EliminarCuenta(Cuenta cuenta)
